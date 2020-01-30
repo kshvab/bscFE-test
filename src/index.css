@@ -12,6 +12,42 @@ code {
     monospace;
 }
 
-.k8card {
-  max-width: 20rem;
+.k8Card {
+  /*max-width: 20rem;}*/
+}
+
+.k8Container {
+  padding: 15px 15px;
+  margin-bottom: 2rem;
+  background-color: #e9ecef;
+  border-radius: 0.3rem;
+}
+
+.k8ContainerHeader {
+  padding: 15px 15px;
+  margin-bottom: 2rem;
+  background-color: #e9ecef;
+  border-radius: 0.3rem;
+}
+
+.addbutton {
+  float: right;
+}
+
+.k8buttons {
+  float: right;
+  display: none;
+}
+
+.k8Card:hover .k8buttons {
+  display: block;
+}
+
+.k8ContainerTitleCard {
+  position: relative;
+  min-width: 0;
+  word-wrap: break-word;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
 }
