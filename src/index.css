@@ -32,11 +32,13 @@ code {
 
 .addbutton {
   float: right;
+  cursor: pointer;
 }
 
 .k8buttons {
   float: right;
   display: none;
+  cursor: pointer;
 }
 
 .k8Card:hover .k8buttons {
@@ -50,4 +52,12 @@ code {
   background-clip: border-box;
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 0.25rem;
+}
+
+.show {
+  display: block !important;
+}
+
+.hide {
+  display: none;
 }

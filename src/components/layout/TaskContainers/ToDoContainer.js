@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext, useState, setState } from 'react';
 import { tagsTypes } from '../../../config';
-
+import Context from '../../../globalstore/context';
 const ToDoContainer = props => {
   const { cardsArr } = props;
-  console.log(cardsArr);
+
+  const { lang } = useContext(Context);
 
   const tagBadge = tag => {
     return (

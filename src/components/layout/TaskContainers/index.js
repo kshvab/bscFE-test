@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
+
 import ToDoContainer from './ToDoContainer';
 import InWorkContainer from './InWorkContainer';
 import DoneContainer from './DoneContainer';
+import ModalAddItem from './ModalAddItem';
+
+import Context from '../../../globalstore/context';
+import Filters from './Filters';
+import { strings } from '../../../config';
 
 let toDoArr = [
   {
@@ -11,7 +17,7 @@ let toDoArr = [
     description:
       'Some quick example text to build on the card title and make up the bulk of the cards content.',
     text: '',
-    tags: ['adsense', 'dev', 'design']
+    tags: ['dev', 'design']
   },
   {
     id: '12',
@@ -59,34 +65,55 @@ let donekArr = [
 ];
 
 const TaskContainers = () => {
+  const { lang, setPage, setIsModalAddItemShown } = useContext(Context);
+  setPage('Home');
+
+  function fShowModalAddItem() {
+    setIsModalAddItemShown(true);
+  }
+
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col-lg-4">
-          <div className="k8Container">
-            <div className="k8ContainerTitleCard text-white bg-info mb-3 p-2">
-              To do
-              <div className="addbutton">
-                <img src="/images/add.png" alt="" width="19" height="19" />
+    <>
+      <div className="container">
+        <Filters />
+        <div className="row">
+          <div className="col-lg-4">
+            <div className="k8Container">
+              <div className="k8ContainerTitleCard text-white bg-info mb-3 p-2">
+                {strings[lang].toDo}
+                <div className="addbutton">
+                  <img
+                    src="/images/add.png"
+                    alt=""
+                    width="19"
+                    height="19"
+                    onClick={fShowModalAddItem}
+                  />
+                </div>
               </div>
+              <ToDoContainer cardsArr={toDoArr} />
             </div>
-            <ToDoContainer cardsArr={toDoArr} />
           </div>
-        </div>
-        <div className="col-lg-4">
-          <div className="k8Container">
-            <div className="card text-white bg-primary mb-3 p-2">In work</div>
-            <InWorkContainer />
+          <div className="col-lg-4">
+            <div className="k8Container">
+              <div className="card text-white bg-primary mb-3 p-2">
+                {strings[lang].inWork}
+              </div>
+              <InWorkContainer />
+            </div>
           </div>
-        </div>
-        <div className="col-lg-4">
-          <div className="k8Container">
-            <div className="card text-white bg-success mb-3 p-2">Done</div>
-            <DoneContainer />
+          <div className="col-lg-4">
+            <div className="k8Container">
+              <div className="card text-white bg-success mb-3 p-2">
+                {strings[lang].done}
+              </div>
+              <DoneContainer />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <ModalAddItem />
+    </>
   );
 };
 
