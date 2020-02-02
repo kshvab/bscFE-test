@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Draggable from '../Draggable';
 import Droppable from '../Droppable';
+import Context from '../../../globalstore/context';
 
 const droppableStyle = {
   backgroundColor: '#555',
@@ -10,6 +11,8 @@ const droppableStyle = {
 };
 
 const DndTest = props => {
+  const { setPage } = useContext(Context);
+  setPage('Test');
   return (
     <div>
       <Droppable id="dr1" style={droppableStyle}>

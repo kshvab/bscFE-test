@@ -1,17 +1,20 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import classnames from 'classnames';
 
 import Context from '../../../globalstore/context';
 import { strings, apiPath } from '../../../config';
 
-const ModalAddItem = () => {
-  const { lang, isModalAddItemShown, setIsModalAddItemShown } = useContext(
-    Context
-  );
+const ModalEditItem = () => {
+  const {
+    lang,
+    isModalEditItemShown,
+    setIsModalEditItemShown,
+    editedItem
+  } = useContext(Context);
 
-  function hideMidalAddItem() {
-    setIsModalAddItemShown(false);
+  function hideModalEditItem() {
+    setIsModalEditItemShown(false);
   }
 
   let [title, setTitle] = useState('');
@@ -19,8 +22,25 @@ const ModalAddItem = () => {
   let [agent, setAgent] = useState('');
   let [fulltext, setFulltext] = useState('');
   let [tags, setTags] = useState([]);
-
   let [status, setStatus] = useState('');
+
+  useEffect(() => {
+    async function fetchData() {
+      //------- Fetch --------
+      const taskJson = await fetch(`${apiPath}/task/${editedItem}`);
+
+      const taskJsonObj = await taskJson.json();
+      setTitle(taskJsonObj.title);
+      setDescription(taskJsonObj.description);
+      setAgent(taskJsonObj.agent);
+      setFulltext(taskJsonObj.fulltext);
+      setTags(taskJsonObj.tags);
+      setStatus(taskJsonObj.status);
+    }
+    if (isModalEditItemShown && editedItem) {
+      fetchData();
+    }
+  }, []);
 
   function fChangeTitle(e) {
     setTitle(e.target.value);
@@ -52,12 +72,12 @@ const ModalAddItem = () => {
   }
 
   function fChangeStatus(e) {
-    const { id } = e.target;
-    setStatus(id);
+    const { value } = e.target;
+    setStatus(value);
   }
 
   function fSubmitForm() {
-    let postData = {
+    let editData = {
       agent,
       title,
       description,
@@ -66,17 +86,24 @@ const ModalAddItem = () => {
       tags
     };
 
-    axios.post(`${apiPath}/createtask`, postData).then(function(response) {
-      setIsModalAddItemShown(false);
-    });
+    axios
+      .put(`${apiPath}/edittask/${editedItem}`, editData)
+      .then(function(response) {
+        setIsModalEditItemShown(false);
+        window.location.reload();
+      })
+      .catch(error => {
+        console.log(error);
+        window.location.reload();
+      });
   }
 
   return (
     <div
       className={classnames('modal', 'fade', 'bd-example-modal-lg', {
-        show: isModalAddItemShown
+        show: isModalEditItemShown
       })}
-      id="addItemModal"
+      id="editItemModal"
       tabIndex="-1"
       role="dialog"
       aria-labelledby="exampleModalLongTitle"
@@ -86,14 +113,14 @@ const ModalAddItem = () => {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="exampleModalLongTitle">
-              {strings[lang].addTask}
+              {strings[lang].editTask}
             </h5>
             <button
               type="button"
               className="close"
               data-dismiss="modal"
               aria-label="Close"
-              onClick={hideMidalAddItem}
+              onClick={hideModalEditItem}
             >
               <span aria-hidden="true">&times;</span>
             </button>
@@ -108,7 +135,7 @@ const ModalAddItem = () => {
                   <input
                     type="text"
                     className="form-control"
-                    placeholder={strings[lang].title}
+                    placeholder="Title"
                     id="inputTitle"
                     value={title}
                     onChange={fChangeTitle}
@@ -121,7 +148,7 @@ const ModalAddItem = () => {
                   <input
                     type="text"
                     className="form-control"
-                    placeholder={strings[lang].description}
+                    placeholder="Description"
                     id="inputDescription"
                     value={description}
                     onChange={fChangeDescription}
@@ -134,9 +161,15 @@ const ModalAddItem = () => {
                     <option defaultValue="">
                       {strings[lang].selectAnAgent}
                     </option>
-                    <option value="Sam">Sam</option>
-                    <option value="Kate">Kate</option>
-                    <option value="Helga">Helga</option>
+                    <option value="Sam" selected={agent === 'Sam'}>
+                      Sam
+                    </option>
+                    <option value="Kate" selected={agent === 'Kate'}>
+                      Kate
+                    </option>
+                    <option value="Helga" selected={agent === 'Helga'}>
+                      Helga
+                    </option>
                   </select>
                 </div>
               </div>
@@ -163,13 +196,13 @@ const ModalAddItem = () => {
                         <input
                           type="checkbox"
                           className="custom-control-input"
-                          id="contentCheck"
+                          id="editcontentCheck"
                           name="content"
                           onChange={fChangeTags}
                         />
                         <label
                           className="custom-control-label"
-                          htmlFor="contentCheck"
+                          htmlFor="editcontentCheck"
                         >
                           content
                         </label>
@@ -179,13 +212,13 @@ const ModalAddItem = () => {
                         <input
                           type="checkbox"
                           className="custom-control-input"
-                          id="smmCheck"
+                          id="editsmmCheck"
                           name="smm"
                           onChange={fChangeTags}
                         />
                         <label
                           className="custom-control-label"
-                          htmlFor="smmCheck"
+                          htmlFor="editsmmCheck"
                         >
                           smm
                         </label>
@@ -195,13 +228,13 @@ const ModalAddItem = () => {
                         <input
                           type="checkbox"
                           className="custom-control-input"
-                          id="designCheck"
+                          id="editdesignCheck"
                           name="design"
                           onChange={fChangeTags}
                         />
                         <label
                           className="custom-control-label"
-                          htmlFor="designCheck"
+                          htmlFor="editdesignCheck"
                         >
                           design
                         </label>
@@ -211,13 +244,13 @@ const ModalAddItem = () => {
                         <input
                           type="checkbox"
                           className="custom-control-input"
-                          id="devCheck"
+                          id="editdevCheck"
                           name="dev"
                           onChange={fChangeTags}
                         />
                         <label
                           className="custom-control-label"
-                          htmlFor="devCheck"
+                          htmlFor="editdevCheck"
                         >
                           dev
                         </label>
@@ -230,12 +263,17 @@ const ModalAddItem = () => {
                       <div className="custom-control custom-radio">
                         <input
                           type="radio"
-                          id="todo"
+                          id="edittodo"
+                          value="todo"
                           name="customRadio"
                           className="custom-control-input"
                           onChange={fChangeStatus}
+                          checked={status === 'todo'}
                         />
-                        <label className="custom-control-label" htmlFor="todo">
+                        <label
+                          className="custom-control-label"
+                          htmlFor="edittodo"
+                        >
                           {strings[lang].toDo}
                         </label>
                       </div>
@@ -243,14 +281,16 @@ const ModalAddItem = () => {
                       <div className="custom-control custom-radio">
                         <input
                           type="radio"
-                          id="inwork"
+                          id="editinwork"
+                          value="inwork"
                           name="customRadio"
                           className="custom-control-input"
                           onChange={fChangeStatus}
+                          checked={status === 'inwork'}
                         />
                         <label
                           className="custom-control-label"
-                          htmlFor="inwork"
+                          htmlFor="editinwork"
                         >
                           {strings[lang].inWork}
                         </label>
@@ -258,12 +298,17 @@ const ModalAddItem = () => {
                       <div className="custom-control custom-radio">
                         <input
                           type="radio"
-                          id="done"
+                          id="editdone"
                           name="customRadio"
+                          value="done"
                           className="custom-control-input"
                           onChange={fChangeStatus}
+                          checked={status === 'done'}
                         />
-                        <label className="custom-control-label" htmlFor="done">
+                        <label
+                          className="custom-control-label"
+                          htmlFor="editdone"
+                        >
                           {strings[lang].done}
                         </label>
                       </div>
@@ -278,7 +323,7 @@ const ModalAddItem = () => {
               type="button"
               className="btn btn-secondary"
               data-dismiss="modal"
-              onClick={hideMidalAddItem}
+              onClick={hideModalEditItem}
             >
               {strings[lang].close}
             </button>
@@ -296,4 +341,4 @@ const ModalAddItem = () => {
   );
 };
 
-export default ModalAddItem;
+export default ModalEditItem;

@@ -60,14 +60,31 @@ const Navbar = () => {
           id="navbarColor01"
         >
           <ul className="navbar-nav mr-auto">
-            <li className="nav-item active">
+            <li
+              className={classnames('nav-item', {
+                active: page === 'Home'
+              })}
+            >
               <a className="nav-link" href="/">
                 {strings[lang].pageNameHome}
               </a>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/listview">
+            <li
+              className={classnames('nav-item', {
+                active: page === 'List'
+              })}
+            >
+              <a className="nav-link" href="/listview/1">
                 {strings[lang].pageNameList}
+              </a>
+            </li>
+            <li
+              className={classnames('nav-item', {
+                active: page === 'Test'
+              })}
+            >
+              <a className="nav-link" href="/test">
+                {strings[lang].pageNameDrugNDrop}
               </a>
             </li>
           </ul>

@@ -7,6 +7,8 @@ const tagsTypes = {
 
 const agents = ['Dave', 'Sam', 'Monika', 'Kate'];
 
+const apiPath = 'http://svarka.club/shvabapi';
+
 const strings = {
   EN: {
     siteName: '.BSC Task',
@@ -18,7 +20,18 @@ const strings = {
     search: 'Search',
     toDo: 'To do',
     inWork: 'In work',
-    done: 'Done'
+    done: 'Done',
+
+    cancel: 'Cancel',
+    title: 'Title',
+    description: 'Description',
+    fullText: 'Full text',
+    close: 'Close',
+    save: 'Save',
+    addTask: 'Add Task',
+    selectAnAgent: 'Select an agent',
+    editTask: 'Edit Task',
+    pageNameDrugNDrop: 'DrugAndDrop Tests'
   },
   CZ: {
     siteName: '.BSC Úkol',
@@ -30,7 +43,18 @@ const strings = {
     search: 'Hledání',
     toDo: 'Plán',
     inWork: 'V práci',
-    done: 'Hotovo'
+    done: 'Hotovo',
+    cancel: 'Zrušit',
+
+    title: 'Titul',
+    description: 'Popis',
+    fullText: 'Celý text',
+    close: 'Zavřít',
+    save: 'Uložit',
+    addTask: 'Přidat úkol',
+    selectAnAgent: 'Vyberte agenta',
+    editTask: 'Upravit úlohu',
+    pageNameDrugNDrop: 'DrugAndDrop Tests'
   }
 };
-export { tagsTypes, strings };
+export { tagsTypes, strings, agents, apiPath };

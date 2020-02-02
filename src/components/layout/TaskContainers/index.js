@@ -1,73 +1,106 @@
-import React, { useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
-import ToDoContainer from './ToDoContainer';
-import InWorkContainer from './InWorkContainer';
-import DoneContainer from './DoneContainer';
+import TaskContainer from './TaskContainer';
 import ModalAddItem from './ModalAddItem';
-
+import ModalEditItem from './ModalEditItem';
 import Context from '../../../globalstore/context';
 import Filters from './Filters';
-import { strings } from '../../../config';
-
-let toDoArr = [
-  {
-    id: '11',
-    agent: 'Sam',
-    title: 'To Do card title 1',
-    description:
-      'Some quick example text to build on the card title and make up the bulk of the cards content.',
-    text: '',
-    tags: ['dev', 'design']
-  },
-  {
-    id: '12',
-    agent: 'Monika',
-    title: 'To Do card title 2',
-    description:
-      'Some quick example text to build on the card title and make up the bulk of the cards content.',
-    text: '',
-    tags: ['smm', 'content']
-  }
-];
-
-let inWorkArr = [
-  {
-    id: '13',
-    agent: 'Sam',
-    title: 'In Work card title 1',
-    description:
-      'Some quick example text to build on the card title and make up the bulk of the cards content.'
-  },
-  {
-    id: '14',
-    agent: 'Sam',
-    title: 'In Work card title 2',
-    description:
-      'Some quick example text to build on the card title and make up the bulk of the cards content.'
-  }
-];
-
-let donekArr = [
-  {
-    id: '15',
-    agent: 'Sam',
-    title: 'Done card title 1',
-    description:
-      'Some quick example text to build on the card title and make up the bulk of the cards content.'
-  },
-  {
-    id: '16',
-    agent: 'Edith',
-    title: 'Done card title 2',
-    description:
-      'Some quick example text to build on the card title and make up the bulk of the cards content.'
-  }
-];
+import { strings, apiPath } from '../../../config';
 
 const TaskContainers = () => {
-  const { lang, setPage, setIsModalAddItemShown } = useContext(Context);
+  const {
+    lang,
+    setPage,
+    setIsModalAddItemShown,
+    filterAgent,
+    filterSearch,
+    isTagContentActive,
+
+    isTagSmmActive,
+
+    isTagDesignActive,
+
+    isTagDevActive
+  } = useContext(Context);
+
+  //------------ Title ---------------//
   setPage('Home');
 
+  //---------- hook block ------------//
+
+  let [toDoArr, setTodoArr] = useState([]);
+  let [inWorkArr, setInWorkArr] = useState([]);
+  let [doneArr, setDoneArr] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      //------- Fetch --------
+      const tasksJson = await fetch(`${apiPath}/tasks`);
+      let tasksJsonObj = await tasksJson.json();
+
+      //---------FILTERS --------
+      if (filterAgent)
+        tasksJsonObj = tasksJsonObj.filter(function(elem) {
+          return elem.agent === filterAgent;
+        });
+
+      if (filterSearch) {
+        tasksJsonObj = tasksJsonObj.filter(function(elem) {
+          return elem.title.indexOf(filterSearch) !== -1;
+        });
+      }
+
+      if (
+        isTagContentActive ||
+        isTagSmmActive ||
+        isTagDesignActive ||
+        isTagDevActive
+      ) {
+        let tagContentArr = [],
+          tagSmmArr = [],
+          tagDesignArr = [],
+          tagDevArr = [];
+
+        if (isTagContentActive)
+          tagContentArr = tasksJsonObj.filter(function(elem) {
+            return elem.tags.indexOf('content') !== -1;
+          });
+        if (isTagSmmActive)
+          tagSmmArr = tasksJsonObj.filter(function(elem) {
+            return elem.tags.indexOf('smm') !== -1;
+          });
+        if (isTagDesignActive)
+          tagDesignArr = tasksJsonObj.filter(function(elem) {
+            return elem.tags.indexOf('design') !== -1;
+          });
+        if (isTagDevActive)
+          tagDevArr = tasksJsonObj.filter(function(elem) {
+            return elem.tags.indexOf('dev') !== -1;
+          });
+
+        tasksJsonObj = tagContentArr.concat(tagSmmArr, tagDesignArr, tagDevArr);
+      }
+
+      // ----------- Creating Categories --------
+      let tempToDoArr = tasksJsonObj.filter(function(elem) {
+        return elem.status === 'todo';
+      });
+      setTodoArr(tempToDoArr);
+
+      let tempInWorkArr = tasksJsonObj.filter(function(elem) {
+        return elem.status === 'inwork';
+      });
+      setInWorkArr(tempInWorkArr);
+
+      let tempDoneArr = tasksJsonObj.filter(function(elem) {
+        return elem.status === 'done';
+      });
+      setDoneArr(tempDoneArr);
+    }
+    fetchData();
+  }, []);
+
+  //-------- functions block ---------//
   function fShowModalAddItem() {
     setIsModalAddItemShown(true);
   }
@@ -91,28 +124,47 @@ const TaskContainers = () => {
                   />
                 </div>
               </div>
-              <ToDoContainer cardsArr={toDoArr} />
+              <TaskContainer cardsArr={toDoArr} cardBorder="border-info" />
             </div>
           </div>
           <div className="col-lg-4">
             <div className="k8Container">
-              <div className="card text-white bg-primary mb-3 p-2">
+              <div className="k8ContainerTitleCard text-white bg-primary mb-3 p-2">
                 {strings[lang].inWork}
+                <div className="addbutton">
+                  <img
+                    src="/images/add.png"
+                    alt=""
+                    width="19"
+                    height="19"
+                    onClick={fShowModalAddItem}
+                  />
+                </div>
               </div>
-              <InWorkContainer />
+              <TaskContainer cardsArr={inWorkArr} cardBorder="border-primary" />
             </div>
           </div>
           <div className="col-lg-4">
             <div className="k8Container">
-              <div className="card text-white bg-success mb-3 p-2">
+              <div className="k8ContainerTitleCard text-white bg-success mb-3 p-2">
                 {strings[lang].done}
+                <div className="addbutton">
+                  <img
+                    src="/images/add.png"
+                    alt=""
+                    width="19"
+                    height="19"
+                    onClick={fShowModalAddItem}
+                  />
+                </div>
               </div>
-              <DoneContainer />
+              <TaskContainer cardsArr={doneArr} cardBorder="border-success" />
             </div>
           </div>
         </div>
       </div>
       <ModalAddItem />
+      <ModalEditItem />
     </>
   );
 };
