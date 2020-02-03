@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import Context from '../../globalstore/context';
 import { strings } from '../../config';
 import classnames from 'classnames';
@@ -65,27 +66,27 @@ const Navbar = () => {
                 active: page === 'Home'
               })}
             >
-              <a className="nav-link" href="/">
+              <Link className="nav-link" to="/">
                 {strings[lang].pageNameHome}
-              </a>
+              </Link>
             </li>
             <li
               className={classnames('nav-item', {
                 active: page === 'List'
               })}
             >
-              <a className="nav-link" href="/listview/1">
+              <Link className="nav-link" to="/listview/1">
                 {strings[lang].pageNameList}
-              </a>
+              </Link>
             </li>
             <li
               className={classnames('nav-item', {
                 active: page === 'Test'
               })}
             >
-              <a className="nav-link" href="/test">
+              <Link className="nav-link" to="/test">
                 {strings[lang].pageNameDrugNDrop}
-              </a>
+              </Link>
             </li>
           </ul>
           <button

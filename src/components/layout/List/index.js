@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import classnames from 'classnames';
 
 import Context from '../../../globalstore/context';
@@ -56,9 +57,9 @@ const List = props => {
               active: page == i
             })}
           >
-            <a class="page-link" href={`${i}`}>
+            <Link className="page-link" to={`${i}`}>
               {i}
-            </a>
+            </Link>
           </li>
         );
       }
@@ -72,9 +73,9 @@ const List = props => {
               disabled: page == 1
             })}
           >
-            <a class="page-link" href="1">
+            <Link className="page-link" to="1">
               &laquo;
-            </a>
+            </Link>
           </li>
           {internalButtons}
           <li
@@ -82,9 +83,9 @@ const List = props => {
               disabled: page == pages
             })}
           >
-            <a class="page-link" href={`${pages}`}>
+            <Link className="page-link" to={`${pages}`}>
               &raquo;
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
