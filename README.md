@@ -7,17 +7,24 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ### About API
 
 A special API was created for the project, placed on one of my old projects (path in config.js)
+
 Cloud MongoDB was used.
+
 I put a sample of the API route at the root of the project so you can read it (shvabapi.js)
+
 CORS is allowed, so you can use project temporarily from anywhere.
 
 ### Fiches
 
-React supports sass already, so Bootstrap theme was changed simply by specifying new values.
-React hooks and context are used.
-Filtering - at Home page
-Pagination - al List page
-Drug and Drops first steps - at Test Page (Did not have time to implement at the main page)
+- React supports sass already, so Bootstrap theme was changed simply by specifying new values.
+
+- React hooks and context are used.
+
+- Filtering - at Home page
+
+- Pagination - al List page
+
+- Drug and Drops first steps - at Test Page (Did not have time to implement at the main page)
 
 ### Deploy
 
